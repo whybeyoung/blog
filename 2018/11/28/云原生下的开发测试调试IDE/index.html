@@ -15,23 +15,23 @@
 <meta property="og:site_name" content="君莫笑的博客">
 <meta property="og:description" content="背景&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在容器技术高度流行的当下，Kubernetes盛行。那么作为开发测试又是如何去快速上手或者以某种方式这门新技术呢， 除了无聊的培训，看资料，我们是否需要一个趁手的武器来丰富我们的 技能包？ 答案是肯定的。 怎么玩？ 用什么？ 话不多说。 VSCODE! Kubernetes！ 完了。。  玩法 首先下载VScode">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/timg.jpg">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/k8s-plugin.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/tubiao.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/userconfig.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/userconfig2.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/kubeconfig.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/adminview.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/bucunzai.gif">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/viewedit.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/swagger-genconf.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/kubeconfig2.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/timg.jpg">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/k8s-plugin.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/tubiao.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/userconfig.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/userconfig2.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/kubeconfig.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/adminview.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/bucunzai.gif">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/viewedit.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/swagger-genconf.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/kubeconfig2.png">
 <meta property="article:published_time" content="2018-11-28T14:26:13.000Z">
-<meta property="article:modified_time" content="2022-06-15T15:18:08.008Z">
+<meta property="article:modified_time" content="2022-06-15T15:49:51.655Z">
 <meta property="article:author" content="ybyang2">
 <meta property="article:tag" content="Go Python Kubernetes">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://berlinsaint.github.io/blog/blog/img/timg.jpg">
+<meta name="twitter:image" content="https://berlinsaint.github.io/blog/img/timg.jpg">
   
     <link rel="alternative" href="/atom.xml" title="君莫笑的博客" type="application/atom+xml">
   
@@ -191,18 +191,18 @@
 <p>答案是肯定的。</p>
 <p>怎么玩？ 用什么？ 话不多说。 <code>VSCODE! Kubernetes！</code></p>
 <p>完了。。</p>
-<p><img src="/blog/blog/img/timg.jpg" alt="你以为这就完"></p>
+<p><img src="/blog/img/timg.jpg" alt="你以为这就完"></p>
 <h2 id="玩法"><a href="#玩法" class="headerlink" title="玩法"></a>玩法</h2><ul>
 <li><p>首先下载VScode, 不用找我要地址吧</p>
 </li>
 <li><p>VSCode 插件管理器 搜索 Kubernetes, 安装， 重载</p>
 </li>
 </ul>
-<p><img src="/blog/blog/img/k8s-plugin.png" alt="你以为这就完"></p>
+<p><img src="/blog/img/k8s-plugin.png" alt="你以为这就完"></p>
 <ul>
 <li>这时候你的VS 左树应该有个 K8S的图标了</li>
 </ul>
-<p><img src="/blog/blog/img/tubiao.png" alt="你以为这就完"></p>
+<p><img src="/blog/img/tubiao.png" alt="你以为这就完"></p>
 <ul>
 <li><p>这时候你点击下图标貌切到了一个界面但是没啥反应, 右下角提示要你安装一些东西 <code>kubectl</code> 什么的，嗯这些是需要安装的</p>
 </li>
@@ -210,20 +210,20 @@
 </li>
 </ul>
 <h2 id="玩了吗-没玩起来"><a href="#玩了吗-没玩起来" class="headerlink" title="玩了吗? 没玩起来"></a>玩了吗? 没玩起来</h2><p>这时候你需要配置？ 怎么配？</p>
-<p><img src="/blog/blog/img/userconfig.png" alt="你以为这就完"></p>
+<p><img src="/blog/img/userconfig.png" alt="你以为这就完"></p>
 <p>来配置下：</p>
-<p><img src="/blog/blog/img/userconfig2.png" alt="你以为这就完"></p>
+<p><img src="/blog/img/userconfig2.png" alt="你以为这就完"></p>
 <p>这里注意下 kubeconfig这一行，熟悉的人知道这是集群的配置，我们先指定下集群的 管理config（admin.conf）尝尝鲜。</p>
-<p><img src="/blog/blog/img/kubeconfig.png" alt="你以为这就完"></p>
+<p><img src="/blog/img/kubeconfig.png" alt="你以为这就完"></p>
 <p>保存下，点击K8S图标看下效果:</p>
-<p><img src="/blog/blog/img/adminview.png" alt="你以为"><br>是不是帅炸？</p>
+<p><img src="/blog/img/adminview.png" alt="你以为"><br>是不是帅炸？</p>
 <h2 id="完了吗"><a href="#完了吗" class="headerlink" title="完了吗"></a>完了吗</h2><p>只是教你这点东西，恐怕你根本不会把这个神器教给开发测试同学，</p>
 <p>我的天总不能让我运维把 集群admin.confi给你<code>开发测试</code>当玩物吧。。。。。</p>
-<p><img src="/blog/blog/img/bucunzai.gif" alt="你以为"></p>
+<p><img src="/blog/img/bucunzai.gif" alt="你以为"></p>
 <p>这里告诉你，某种程度上无论你们公司平台怎么折腾，是把namespace当做项目也好，还是把namespace作为项目下的一个分区也好，你都必须实现一个生成用户kubeconfig的服务。原理很简单;</p>
 <p>怎么做？ 简单的做可以这样做</p>
 <p>第一步: 给你的用户赋权</p>
-<p><code>Kubernetes</code> RBAC 内置 两个 cluster role； edit, view<br><img src="/blog/blog/img/viewedit.png" alt="xx"></p>
+<p><code>Kubernetes</code> RBAC 内置 两个 cluster role； edit, view<br><img src="/blog/img/viewedit.png" alt="xx"></p>
 <p>这两个角色顾名思义， 查看，编辑角色</p>
 <p>你可以动态的(基于API)给用户赋予某个namspace的权限 (即RoleBinding)<br>具体参考一段py代码:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> action == <span class="string">&quot;add&quot;</span>:</span><br><span class="line">    result = k8s.rbac.create_namespaced_role_binding(namespace,</span><br><span class="line">                                                     &#123;</span><br><span class="line">                                                         <span class="string">&quot;metadata&quot;</span>: &#123;</span><br><span class="line">                                                             <span class="string">&quot;name&quot;</span>: <span class="string">&quot;&#123;&#125;-&#123;&#125;-&#123;&#125;-rolebinding&quot;</span>.<span class="built_in">format</span>(username,role,namespace)</span><br><span class="line">                                                         &#125;,</span><br><span class="line">                                                         <span class="string">&quot;roleRef&quot;</span>: &#123;</span><br><span class="line">                                                             <span class="string">&quot;apiGroup&quot;</span>: <span class="string">&quot;rbac.authorization.k8s.io&quot;</span>,</span><br><span class="line">                                                             <span class="string">&quot;kind&quot;</span>: <span class="string">&quot;ClusterRole&quot;</span>,</span><br><span class="line">                                                             <span class="string">&quot;name&quot;</span>: role</span><br><span class="line">                                                         &#125;,</span><br><span class="line">                                                         <span class="string">&quot;subjects&quot;</span>: [</span><br><span class="line">                                                             &#123;</span><br><span class="line">                                                                 <span class="string">&quot;apiGroup&quot;</span>: <span class="string">&quot;rbac.authorization.k8s.io&quot;</span>,</span><br><span class="line">                                                                 <span class="string">&quot;kind&quot;</span>: <span class="string">&quot;User&quot;</span>,</span><br><span class="line">                                                                 <span class="string">&quot;name&quot;</span>: username</span><br><span class="line">                                                             &#125;</span><br><span class="line">                                                         ]</span><br><span class="line">                                                     &#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    result = k8s.rbac.delete_namespaced_role_binding(<span class="string">&quot;&#123;&#125;-&#123;&#125;-&#123;&#125;-rolebinding&quot;</span>.<span class="built_in">format</span>(username, role, namespace),</span><br><span class="line">                                                     namespace, &#123;&#125;)</span><br></pre></td></tr></table></figure>
@@ -234,10 +234,10 @@
 <p>然后说明下 kubeconfig文件构成，kubeconfig本身是支持 多cluster多Namespace的。</p>
 <p><code>重点说明下</code> 多集群的时候，每个集群的ca证书对可能不一样，于是对单个用户来说，两个集群的访问凭据也不一样，kubeconfig中的User.name 仅仅是一个key而已。 所以同一个用户在集群11中，kubecongfig的username可能为 ybyang2-cluster-11,但是真正有效的用户名是ybyang2 是签发在用户凭据的证书中，所以kubeconfig中的username其实无关紧要，只要在config的上下文中能正确引用即可。其他诸如 <code>context.name</code>, <code>cluster.name</code> 同理</p>
 <p>简单贴下实例api图:</p>
-<p><img src="/blog/blog/img/swagger-genconf.png" alt="xx"></p>
+<p><img src="/blog/img/swagger-genconf.png" alt="xx"></p>
 <p>如下图所示 是API生成同一用户对两个集群的 的一个 kubeconfig文件。。。<br>那么 这个用户在 vscode配置这个上这个kubeconfig后 将只能操被限制的命名空间。并且它的权限随时受apiserver全局控制(我们这里是edit,view由项目管理员分配)</p>
 <p>效果如下。</p>
-<p><img src="/blog/blog/img/kubeconfig2.png" alt="xx"></p>
+<p><img src="/blog/img/kubeconfig2.png" alt="xx"></p>
 <p>其实这就是k8s的的一个简单的多租户玩法，基于vscode，我们让我们的开发者更加的云原生，也更容易让开发运维和测试在保证集群的稳定前提下学习k8s的概念，部署应用到k8s。</p>
 
       

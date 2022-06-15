@@ -15,13 +15,13 @@
 <meta property="og:site_name" content="君莫笑的博客">
 <meta property="og:description" content="写在本次博客之前，上次博客之后的一点感受距离上次写技术博客已经快有1年多的时间了，每隔天看着开发者头条不断的有新的订阅用户，就总感觉心有愧疚，毕竟一年多没有维护全栈养成的订阅号了。 要问我干啥去了， 我只能回答，当然在成为全占的路上。。。 1年多，个人变化挺大的，不仅仅是体型上的变化步入中年的肥胖，更多的是心态上的爆炸到心态的平和的一个变化。 这一年，终于做出了不敢之前不敢做的决定，在合肥这个地方">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/reclass_01.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/reclass_002.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/reclass_004.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/reclass_005.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/reclass_006.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/reclass_01.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/reclass_002.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/reclass_004.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/reclass_005.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/reclass_006.png">
 <meta property="article:published_time" content="2019-11-22T14:22:22.000Z">
-<meta property="article:modified_time" content="2022-06-15T15:18:08.007Z">
+<meta property="article:modified_time" content="2022-06-15T15:49:51.717Z">
 <meta property="article:author" content="ybyang2">
 <meta property="article:tag" content="Go">
 <meta property="article:tag" content="Python">
@@ -29,7 +29,7 @@
 <meta property="article:tag" content="Salt Stack">
 <meta property="article:tag" content="Reclass">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://berlinsaint.github.io/blog/blog/img/reclass_01.png">
+<meta name="twitter:image" content="https://berlinsaint.github.io/blog/img/reclass_01.png">
   
     <link rel="alternative" href="/atom.xml" title="君莫笑的博客" type="application/atom+xml">
   
@@ -258,29 +258,29 @@ It is also a stand-alone tool for merging data sources recursively.
 <p>我们从最基本的组件单元开始：</p>
 <p>我们数据中心的服务器每一台都要跑N多的组件，有系统的，有业务计算的，有监控的，有日志的，有存储的。</p>
 <p>我们以openstack以及相关组件为例<br>如下图:</p>
-<p><img src="/blog/blog/img/reclass_01.png" alt="reclass01"></p>
+<p><img src="/blog/img/reclass_01.png" alt="reclass01"></p>
 <p>乍一看，我们要部署这么多个组件杂乱无比啥都有，这么去管理一个host清单，会很吃力， 你无法清晰的知道，哪些机器<br>需要部署什么，哪些机器是不是必须都要部署，你无法看出。</p>
 <p>我们会去对它分类，聪明点的都会去分类。</p>
 <p>比如我这样去划分：</p>
-<p><img src="/blog/blog/img/reclass_002.png" alt="reclass02"></p>
+<p><img src="/blog/img/reclass_002.png" alt="reclass02"></p>
 <p>靠， 咋这么扯淡，还这么多的分类， 你要想想，我这里第一列只是列举了一些，实际组件的分类分到第二列这个级别时</p>
 <p>一定不会有超过第一列的量级。不然分类有啥意义呢是不？ 我这里碍于图文限制，只列举几个典型，请自行理解。</p>
 <p>这第一次分类，如果按照这个分类去部署，对应每一个组件实际上只需要做一次参数化（可以看到左侧每个组件只被指向一次，即一次<br>参数化）</p>
 <p>第一次分类已经将组件数量减少一个量级（虽然此图表达不出来，但是可以自行脑补），第一次分类够了吗，显然不够。如果我们仅限于</p>
 <p>某个业务那么你可能只需要考虑到这，但是如果你从集群，从数据中心来考虑，我们仍然需要进一步的分类。</p>
 <p>第一次分类我们更多的是从组件的类别上去划分，第二层我们可以从集群的角度划分，如下图</p>
-<p><img src="/blog/blog/img/reclass_004.png" alt="reclass02"></p>
+<p><img src="/blog/img/reclass_004.png" alt="reclass02"></p>
 <p>看到右侧的分类，我们分成openstack 计算集群，控制集群， 存储集群（实际上到此，你还可以添加k8s控制集群，k8s计算集群）</p>
 <p>此图我们的连线，第二列分类和第三列分类关系略显复杂，每个分类被指向了多次，这意味这什么？意味这，如果我要部署一个存储集群</p>
 <p>那么需要给我的 linuxsystem（所对应的组件）做一次参数化部署；当我再去部署一套openstack计算集群的时候，我还要给 LinuxSystem</p>
 <p>做一次参数化。发现问题了么， 由于多次被指向，显得不那么合理，维护起来也不好维护，从集成商的角度，所有的东西，只需要我一个</p>
 <p>总闸 ，部署与不部署，部署成什么参数都由我总闸控制，对比一下下图。</p>
-<p><img src="/blog/blog/img/reclass_005.png" alt="reclass03"></p>
+<p><img src="/blog/img/reclass_005.png" alt="reclass03"></p>
 <p>图中 X-DeploySystem 在某家集成商称之为 MCP 架构，实际上抽离出来的一个部署基础模型就是这样；</p>
 <p>到这里其实我们已经做了2次比较规整的对组件，对分类再分类； 这些都只是为了更好的去管理我们的主机清单。</p>
 <p>那么从上图，如何再去对应到我们的真是机器集群呢？这个也需要我们 在部署前做好规划，即对机器cluster也要做分类</p>
 <p>仔细理解下图：</p>
-<p><img src="/blog/blog/img/reclass_006.png" alt="reclass03"></p>
+<p><img src="/blog/img/reclass_006.png" alt="reclass03"></p>
 <p>最右侧是我们的机器，每个机器规划好做什么用途，部署什么主要类型的节点，我们从cmp01出发，该机器用于openstack</p>
 <p>计算节点，它需要部署除openstack计算节点的组件之外，一些基础组件也需要部署。顺着留图来个完整的部署链路，是不是</p>
 <p>有点感觉了，没错这就是Reclass 。Recursive classification ，递归的分类方法。这个分类方法，可以由你来定义通常且只需要定义</p>

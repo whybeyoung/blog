@@ -320,7 +320,7 @@
 <li>包分发到pypi或者自建pypi源</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">poetry publish                                                                                                                              </span><br><span class="line">Username: ybyang7</span><br><span class="line">Password: </span><br><span class="line">Publishing iflags (1.0.2) to PyPI</span><br><span class="line"> - Uploading iflags-1.0.2-py3-none-any.whl 100%</span><br><span class="line"> - Uploading iflags-1.0.2.tar.gz 100%</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><img src="/blog/blog/img/16552713546268.jpg"></p>
+<p><img src="/blog/img/16552713546268.jpg"></p>
 <ol start="2">
 <li>即可在其他机器上 直接 <code>pip  install iflags</code> 即可使用</li>
 </ol>
@@ -472,29 +472,29 @@ It is also a stand-alone tool for merging data sources recursively.
 <p>我们从最基本的组件单元开始：</p>
 <p>我们数据中心的服务器每一台都要跑N多的组件，有系统的，有业务计算的，有监控的，有日志的，有存储的。</p>
 <p>我们以openstack以及相关组件为例<br>如下图:</p>
-<p><img src="/blog/blog/img/reclass_01.png" alt="reclass01"></p>
+<p><img src="/blog/img/reclass_01.png" alt="reclass01"></p>
 <p>乍一看，我们要部署这么多个组件杂乱无比啥都有，这么去管理一个host清单，会很吃力， 你无法清晰的知道，哪些机器<br>需要部署什么，哪些机器是不是必须都要部署，你无法看出。</p>
 <p>我们会去对它分类，聪明点的都会去分类。</p>
 <p>比如我这样去划分：</p>
-<p><img src="/blog/blog/img/reclass_002.png" alt="reclass02"></p>
+<p><img src="/blog/img/reclass_002.png" alt="reclass02"></p>
 <p>靠， 咋这么扯淡，还这么多的分类， 你要想想，我这里第一列只是列举了一些，实际组件的分类分到第二列这个级别时</p>
 <p>一定不会有超过第一列的量级。不然分类有啥意义呢是不？ 我这里碍于图文限制，只列举几个典型，请自行理解。</p>
 <p>这第一次分类，如果按照这个分类去部署，对应每一个组件实际上只需要做一次参数化（可以看到左侧每个组件只被指向一次，即一次<br>参数化）</p>
 <p>第一次分类已经将组件数量减少一个量级（虽然此图表达不出来，但是可以自行脑补），第一次分类够了吗，显然不够。如果我们仅限于</p>
 <p>某个业务那么你可能只需要考虑到这，但是如果你从集群，从数据中心来考虑，我们仍然需要进一步的分类。</p>
 <p>第一次分类我们更多的是从组件的类别上去划分，第二层我们可以从集群的角度划分，如下图</p>
-<p><img src="/blog/blog/img/reclass_004.png" alt="reclass02"></p>
+<p><img src="/blog/img/reclass_004.png" alt="reclass02"></p>
 <p>看到右侧的分类，我们分成openstack 计算集群，控制集群， 存储集群（实际上到此，你还可以添加k8s控制集群，k8s计算集群）</p>
 <p>此图我们的连线，第二列分类和第三列分类关系略显复杂，每个分类被指向了多次，这意味这什么？意味这，如果我要部署一个存储集群</p>
 <p>那么需要给我的 linuxsystem（所对应的组件）做一次参数化部署；当我再去部署一套openstack计算集群的时候，我还要给 LinuxSystem</p>
 <p>做一次参数化。发现问题了么， 由于多次被指向，显得不那么合理，维护起来也不好维护，从集成商的角度，所有的东西，只需要我一个</p>
 <p>总闸 ，部署与不部署，部署成什么参数都由我总闸控制，对比一下下图。</p>
-<p><img src="/blog/blog/img/reclass_005.png" alt="reclass03"></p>
+<p><img src="/blog/img/reclass_005.png" alt="reclass03"></p>
 <p>图中 X-DeploySystem 在某家集成商称之为 MCP 架构，实际上抽离出来的一个部署基础模型就是这样；</p>
 <p>到这里其实我们已经做了2次比较规整的对组件，对分类再分类； 这些都只是为了更好的去管理我们的主机清单。</p>
 <p>那么从上图，如何再去对应到我们的真是机器集群呢？这个也需要我们 在部署前做好规划，即对机器cluster也要做分类</p>
 <p>仔细理解下图：</p>
-<p><img src="/blog/blog/img/reclass_006.png" alt="reclass03"></p>
+<p><img src="/blog/img/reclass_006.png" alt="reclass03"></p>
 <p>最右侧是我们的机器，每个机器规划好做什么用途，部署什么主要类型的节点，我们从cmp01出发，该机器用于openstack</p>
 <p>计算节点，它需要部署除openstack计算节点的组件之外，一些基础组件也需要部署。顺着留图来个完整的部署链路，是不是</p>
 <p>有点感觉了，没错这就是Reclass 。Recursive classification ，递归的分类方法。这个分类方法，可以由你来定义通常且只需要定义</p>
@@ -708,18 +708,18 @@ It is also a stand-alone tool for merging data sources recursively.
 <p>答案是肯定的。</p>
 <p>怎么玩？ 用什么？ 话不多说。 <code>VSCODE! Kubernetes！</code></p>
 <p>完了。。</p>
-<p><img src="/blog/blog/img/timg.jpg" alt="你以为这就完"></p>
+<p><img src="/blog/img/timg.jpg" alt="你以为这就完"></p>
 <h2 id="玩法"><a href="#玩法" class="headerlink" title="玩法"></a>玩法</h2><ul>
 <li><p>首先下载VScode, 不用找我要地址吧</p>
 </li>
 <li><p>VSCode 插件管理器 搜索 Kubernetes, 安装， 重载</p>
 </li>
 </ul>
-<p><img src="/blog/blog/img/k8s-plugin.png" alt="你以为这就完"></p>
+<p><img src="/blog/img/k8s-plugin.png" alt="你以为这就完"></p>
 <ul>
 <li>这时候你的VS 左树应该有个 K8S的图标了</li>
 </ul>
-<p><img src="/blog/blog/img/tubiao.png" alt="你以为这就完"></p>
+<p><img src="/blog/img/tubiao.png" alt="你以为这就完"></p>
 <ul>
 <li><p>这时候你点击下图标貌切到了一个界面但是没啥反应, 右下角提示要你安装一些东西 <code>kubectl</code> 什么的，嗯这些是需要安装的</p>
 </li>
@@ -727,20 +727,20 @@ It is also a stand-alone tool for merging data sources recursively.
 </li>
 </ul>
 <h2 id="玩了吗-没玩起来"><a href="#玩了吗-没玩起来" class="headerlink" title="玩了吗? 没玩起来"></a>玩了吗? 没玩起来</h2><p>这时候你需要配置？ 怎么配？</p>
-<p><img src="/blog/blog/img/userconfig.png" alt="你以为这就完"></p>
+<p><img src="/blog/img/userconfig.png" alt="你以为这就完"></p>
 <p>来配置下：</p>
-<p><img src="/blog/blog/img/userconfig2.png" alt="你以为这就完"></p>
+<p><img src="/blog/img/userconfig2.png" alt="你以为这就完"></p>
 <p>这里注意下 kubeconfig这一行，熟悉的人知道这是集群的配置，我们先指定下集群的 管理config（admin.conf）尝尝鲜。</p>
-<p><img src="/blog/blog/img/kubeconfig.png" alt="你以为这就完"></p>
+<p><img src="/blog/img/kubeconfig.png" alt="你以为这就完"></p>
 <p>保存下，点击K8S图标看下效果:</p>
-<p><img src="/blog/blog/img/adminview.png" alt="你以为"><br>是不是帅炸？</p>
+<p><img src="/blog/img/adminview.png" alt="你以为"><br>是不是帅炸？</p>
 <h2 id="完了吗"><a href="#完了吗" class="headerlink" title="完了吗"></a>完了吗</h2><p>只是教你这点东西，恐怕你根本不会把这个神器教给开发测试同学，</p>
 <p>我的天总不能让我运维把 集群admin.confi给你<code>开发测试</code>当玩物吧。。。。。</p>
-<p><img src="/blog/blog/img/bucunzai.gif" alt="你以为"></p>
+<p><img src="/blog/img/bucunzai.gif" alt="你以为"></p>
 <p>这里告诉你，某种程度上无论你们公司平台怎么折腾，是把namespace当做项目也好，还是把namespace作为项目下的一个分区也好，你都必须实现一个生成用户kubeconfig的服务。原理很简单;</p>
 <p>怎么做？ 简单的做可以这样做</p>
 <p>第一步: 给你的用户赋权</p>
-<p><code>Kubernetes</code> RBAC 内置 两个 cluster role； edit, view<br><img src="/blog/blog/img/viewedit.png" alt="xx"></p>
+<p><code>Kubernetes</code> RBAC 内置 两个 cluster role； edit, view<br><img src="/blog/img/viewedit.png" alt="xx"></p>
 <p>这两个角色顾名思义， 查看，编辑角色</p>
 <p>你可以动态的(基于API)给用户赋予某个namspace的权限 (即RoleBinding)<br>具体参考一段py代码:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> action == <span class="string">&quot;add&quot;</span>:</span><br><span class="line">    result = k8s.rbac.create_namespaced_role_binding(namespace,</span><br><span class="line">                                                     &#123;</span><br><span class="line">                                                         <span class="string">&quot;metadata&quot;</span>: &#123;</span><br><span class="line">                                                             <span class="string">&quot;name&quot;</span>: <span class="string">&quot;&#123;&#125;-&#123;&#125;-&#123;&#125;-rolebinding&quot;</span>.<span class="built_in">format</span>(username,role,namespace)</span><br><span class="line">                                                         &#125;,</span><br><span class="line">                                                         <span class="string">&quot;roleRef&quot;</span>: &#123;</span><br><span class="line">                                                             <span class="string">&quot;apiGroup&quot;</span>: <span class="string">&quot;rbac.authorization.k8s.io&quot;</span>,</span><br><span class="line">                                                             <span class="string">&quot;kind&quot;</span>: <span class="string">&quot;ClusterRole&quot;</span>,</span><br><span class="line">                                                             <span class="string">&quot;name&quot;</span>: role</span><br><span class="line">                                                         &#125;,</span><br><span class="line">                                                         <span class="string">&quot;subjects&quot;</span>: [</span><br><span class="line">                                                             &#123;</span><br><span class="line">                                                                 <span class="string">&quot;apiGroup&quot;</span>: <span class="string">&quot;rbac.authorization.k8s.io&quot;</span>,</span><br><span class="line">                                                                 <span class="string">&quot;kind&quot;</span>: <span class="string">&quot;User&quot;</span>,</span><br><span class="line">                                                                 <span class="string">&quot;name&quot;</span>: username</span><br><span class="line">                                                             &#125;</span><br><span class="line">                                                         ]</span><br><span class="line">                                                     &#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    result = k8s.rbac.delete_namespaced_role_binding(<span class="string">&quot;&#123;&#125;-&#123;&#125;-&#123;&#125;-rolebinding&quot;</span>.<span class="built_in">format</span>(username, role, namespace),</span><br><span class="line">                                                     namespace, &#123;&#125;)</span><br></pre></td></tr></table></figure>
@@ -751,10 +751,10 @@ It is also a stand-alone tool for merging data sources recursively.
 <p>然后说明下 kubeconfig文件构成，kubeconfig本身是支持 多cluster多Namespace的。</p>
 <p><code>重点说明下</code> 多集群的时候，每个集群的ca证书对可能不一样，于是对单个用户来说，两个集群的访问凭据也不一样，kubeconfig中的User.name 仅仅是一个key而已。 所以同一个用户在集群11中，kubecongfig的username可能为 ybyang2-cluster-11,但是真正有效的用户名是ybyang2 是签发在用户凭据的证书中，所以kubeconfig中的username其实无关紧要，只要在config的上下文中能正确引用即可。其他诸如 <code>context.name</code>, <code>cluster.name</code> 同理</p>
 <p>简单贴下实例api图:</p>
-<p><img src="/blog/blog/img/swagger-genconf.png" alt="xx"></p>
+<p><img src="/blog/img/swagger-genconf.png" alt="xx"></p>
 <p>如下图所示 是API生成同一用户对两个集群的 的一个 kubeconfig文件。。。<br>那么 这个用户在 vscode配置这个上这个kubeconfig后 将只能操被限制的命名空间。并且它的权限随时受apiserver全局控制(我们这里是edit,view由项目管理员分配)</p>
 <p>效果如下。</p>
-<p><img src="/blog/blog/img/kubeconfig2.png" alt="xx"></p>
+<p><img src="/blog/img/kubeconfig2.png" alt="xx"></p>
 <p>其实这就是k8s的的一个简单的多租户玩法，基于vscode，我们让我们的开发者更加的云原生，也更容易让开发运维和测试在保证集群的稳定前提下学习k8s的概念，部署应用到k8s。</p>
 
       
@@ -834,16 +834,16 @@ It is also a stand-alone tool for merging data sources recursively.
 </ul>
 <p>我们研测测试环境的数据库如 Mysql ，redis ，rabbitmq都以容器的方式在我们自研的paas平台上创建；</p>
 <p>但是当我们把mysql已到k8s上时， 我们经常发现MYSQL 的error日志爆出如下错误:</p>
-<p><img src="/blog/blog/img/mysqls-error.png" alt="Alt text"></p>
+<p><img src="/blog/img/mysqls-error.png" alt="Alt text"></p>
 <p>然后我们的客户端则会经常报 <code>Lost Mysql Connection错误</code>, 重试后，连接恢复；</p>
-<p><img src="/blog/blog/img/mysql-err.png" alt="Alt text"></p>
+<p><img src="/blog/img/mysql-err.png" alt="Alt text"></p>
 <p>对于该问题，我们首先思路是排查我们代码上是否存在未正常关闭连接， 同时，我们也部署了另一套非容器的 mysql环境，相同代码下，非容器mysql的表现的非常问题，没有一条Aborted记录，因此我们怀疑一定中间某个网络环节导致了该问题。</p>
 <p><code>Percona</code> 社区写了一篇比较好的文章，这篇文章有必要阅读下，因为这种错误原因是不确定的。</p>
 <p>地址是 <code>https://www.percona.com/blog/2016/05/16/mysql-got-an-error-reading-communication-packet-errors/</code></p>
 <p>但是并没有给出这类问题的根本原因，或者说导致该错误的原因其实可能有多种。</p>
 <p>由于是基本确立问题范围出现在 docker网络，所以我们必须要深入了解下 kubernetes 1.11上的 <code>IPVS</code> 模式原理。</p>
 <p>Kubernetes ipvs 基于 LVS-NAT模型，基本流程如下图:</p>
-<p><img src="/blog/blog/img/lvs-nat.png" alt="Alt text"></p>
+<p><img src="/blog/img/lvs-nat.png" alt="Alt text"></p>
 <ul>
 <li>当用户请求到达Director Server，此时请求的数据报文会先到达内核的PREROUTING链，此时报文的源IP是CIP，目标IP是VIP（K8S 每个node都会有该VIP子接口，名为kube-ipvs0，为虚拟接口）。</li>
 </ul>
@@ -852,7 +852,7 @@ It is also a stand-alone tool for merging data sources recursively.
 <li>PREROUTING链检查发现数据包的目标IP是本机，将数据包送至INPUT链。</li>
 </ul>
 <p>iptables命令是查不到的INPUT这个规则的，因为是ipvs的缘故, 使用 <code>ipvsadm -ln</code> 可以查看到如下规则:</p>
-<p><img src="/blog/blog/img/ipvs-3.png" alt="Alt text"></p>
+<p><img src="/blog/img/ipvs-3.png" alt="Alt text"></p>
 <ul>
 <li><p>POSTROUTING链通过选路，将数据包发送到Real Server(这个我们不好看到，因为内核态或者有没有好的办法可以告知我。)</p>
 </li>
@@ -869,18 +869,18 @@ It is also a stand-alone tool for merging data sources recursively.
 <p><code>tcpdump -i tunl0  host 192.100.111.84  -s0  -w client-mysql.pcap</code></p>
 <p>注意不用指定src dst，那样只能抓到单向报文。。</p>
 <p>同时我们的 client发起一个mysql查询请求， 并另开一个shell 在该node执行 <code>ipvsadm -lnc</code></p>
-<p>结果如下:<br><img src="/blog/blog/img/lnc-0.png" alt="Alt text"></p>
-<p><img src="/blog/blog/img/lnc-1.png" alt="Alt text"></p>
+<p>结果如下:<br><img src="/blog/img/lnc-0.png" alt="Alt text"></p>
+<p><img src="/blog/img/lnc-1.png" alt="Alt text"></p>
 <p>这个图。。。。</p>
 <p>第二列 ，很可疑。。。expired date。。。。。超时。。。，先不管，证明我们的猜想。。继续往下走，不断执行该命令，  第二列在减少，看起来默认是15min，那么这15min我client不再做任何查询，等等吧。。。。</p>
-<p>waiting。。。<br><img src="/blog/blog/img/lnc-2.png" alt="Alt text"></p>
+<p>waiting。。。<br><img src="/blog/img/lnc-2.png" alt="Alt text"></p>
 <p>还有5分钟， 好紧张</p>
 <p>我们想抓到到15min那时候， 会发生什么， 然后client再去查询，会不会触发 mysql的错误以及client的错误(文初的错误)</p>
-<p>时间到:<br><img src="/blog/blog/img/lnc-err-2.png" alt="Alt text"></p>
+<p>时间到:<br><img src="/blog/img/lnc-err-2.png" alt="Alt text"></p>
 <p>我凑， 看起来该链接被清掉了，这时候我们去执行一条查询看看；</p>
-<p><img src="/blog/blog/img/mysql-client-err.png" alt="Alet text"></p>
+<p><img src="/blog/img/mysql-client-err.png" alt="Alet text"></p>
 <p>我们再看看抓包情况:(我是在POD所在节点宿主上抓的跟数据库交互的报文，然后没有抓到连接被RST的报文略疑惑，lvs清空连接对连接本身究竟了做了什么操作仍需要关注。。)</p>
-<p><img src="/blog/blog/img/42322.png" alt="Alet text"><br>在此之后，查询时候又会新键连接， 即没有任何征兆该链接就被断开了，按理说client使用 mysql connection pool 连接复用是不会轻易就更换连接的。</p>
+<p><img src="/blog/img/42322.png" alt="Alet text"><br>在此之后，查询时候又会新键连接， 即没有任何征兆该链接就被断开了，按理说client使用 mysql connection pool 连接复用是不会轻易就更换连接的。</p>
 <p>基本确定了问题， 看起来是 ipvs 维护 VIP的这条链接存在15min左右的超时阈值设定，这个值是否跟系统默认的<code>tcp_keepalive_timeout</code> 有协同影响？ 那么系统的默认tcp超时时间是多少呢？</p>
 <p>确立这个思路，查阅资料(基于15min ipvs为关键词)：</p>
 <ul>
@@ -891,9 +891,9 @@ It is also a stand-alone tool for merging data sources recursively.
 <p>基于上述资料，基本可以分析到， ipvs维护链接有个超时时间，默认为900s为15分钟；然后操作系统默认的tcp_keepalive_timeout 默认为7200s，当一个空闲 tcp连接达到900s时，首先他被ipvs断了，但是操作系统认为该链接还没有到保活超时，所以客户端还会使用之前的连接去发送查询请求，但是ipvs已经不维护该链接了，所以 Lost Connection。。所以只要减小系统的tcp_keepalive_timeout时间，比如到600，后发送一个心跳包，让tcp保活， 这样， ipvs的连接超时也会被重置计数为15min。</p>
 <p>我紧急基于上述资料做了k8s node全量修改配置：</p>
 <p>playbook如下:</p>
-<p><img src="/blog/blog/img/systctl.png" alt="Alet text"></p>
+<p><img src="/blog/img/systctl.png" alt="Alet text"></p>
 <p>k8s.conf如下:</p>
-<p><img src="/blog/blog/img/k8s_ctl.png" alt="Alet text"></p>
+<p><img src="/blog/img/k8s_ctl.png" alt="Alet text"></p>
 <p>关于这三个参数解释下:</p>
 <p>当启用与内核参数或守护程序端配置或客户端配置相关的选项时，它将根据这些选项终止tcp会话。<br>例如，当您将以上述内核参数选项视为示例时，首先将在600秒后开始发送keepalive数据包，之后每隔30秒发送一次下一个数据包10次。<br>当客户端或服务器在这段时间内根本没有应答时，tcp会话将被视为已损坏，并将终止。</p>
 <ul>
@@ -905,7 +905,7 @@ It is also a stand-alone tool for merging data sources recursively.
 <li>（可以清楚看到13:33 道13:43 期间连接无数据，但是10分钟到了，里面有一个KeepAlive报文,修改之前linux 这个值默认是7200s也就是2小时！）</li>
 </ul>
 <p>我们可以在 <code>https://access.redhat.com/solutions/23874</code> 看到一些解释</p>
-<p><img src="/blog/blog/img/after_600_tcp.png" alt="Alet text"></p>
+<p><img src="/blog/img/after_600_tcp.png" alt="Alet text"></p>
 <ul>
 <li>该client的数据库连接池的连接被保活而不是被ipvs clear掉。</li>
 </ul>
@@ -1307,7 +1307,7 @@ It is also a stand-alone tool for merging data sources recursively.
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">  req := k8sClient.CoreV1().RESTClient().Post().</span><br><span class="line">	Resource(<span class="string">&quot;pods&quot;</span>).</span><br><span class="line">	Name(podName).</span><br><span class="line">	Namespace(namespace).</span><br><span class="line">	SubResource(<span class="string">&quot;exec&quot;</span>)</span><br><span class="line"></span><br><span class="line">req.VersionedParams(&amp;v1.PodExecOptions&#123;</span><br><span class="line">	Container: containerName,</span><br><span class="line">	Command:   cmd,</span><br><span class="line">	Stdin:     <span class="literal">true</span>,</span><br><span class="line">	Stdout:    <span class="literal">true</span>,</span><br><span class="line">	Stderr:    <span class="literal">true</span>,</span><br><span class="line">	TTY:       <span class="literal">true</span>,</span><br><span class="line">&#125;, scheme.ParameterCodec)</span><br><span class="line"></span><br><span class="line">exec, _ := remotecommand.NewSPDYExecutor(cfg, <span class="string">&quot;POST&quot;</span>, req.URL())</span><br><span class="line"></span><br><span class="line">exec.Stream(remotecommand.StreamOptions&#123;</span><br><span class="line">	Stdin:             reader,</span><br><span class="line">	Stdout:            writer,</span><br><span class="line">	Stderr:            writer,</span><br><span class="line">	TerminalSizeQueue: terminalSizeQueue,</span><br><span class="line">	Tty:               <span class="literal">true</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>完全的同步代码使用方式，在 Stream 函数内部，库已经帮我们处理好了 reader writer 数据流的处理，我们所要做的就是将流传进来。</p>
-<h3 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h3><p><img src="/blog/blog/img/terminal2.gif" alt="alert"></p>
+<h3 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h3><p><img src="/blog/img/terminal2.gif" alt="alert"></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文大致对比了一下 Go 和 Python 在实现 webterminal 关键功能的代码。我们可以看到，语言的良好的支持性在此时的作用十分的明显。在使用 python 的集成工作中，由于很多库不能无缝接入协程逻辑，其中的适配工作还是比较繁杂的，而在 Go 中完全没有这种问题。</p>
 
       
@@ -1523,7 +1523,7 @@ It is also a stand-alone tool for merging data sources recursively.
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Use public servers from the pool.ntp.org project.</span></span><br><span class="line"><span class="comment"># Please consider joining the pool (http://www.pool.ntp.org/join.html).</span></span><br><span class="line">server 0.rhel.pool.ntp.org iburst</span><br><span class="line">server 1.rhel.pool.ntp.org iburst</span><br><span class="line">server 2.rhel.pool.ntp.org iburst</span><br><span class="line">server 3.rhel.pool.ntp.org iburst</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Ignore stratum in source selection.</span></span><br><span class="line">stratumweight 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># Record the rate at which the system clock gains/losses time.</span></span><br><span class="line">driftfile /var/lib/chrony/drift</span><br><span class="line"></span><br><span class="line"><span class="comment"># Enable kernel RTC synchronization.</span></span><br><span class="line">rtcsync</span><br><span class="line"></span><br><span class="line"><span class="comment"># In first three updates step the system clock instead of slew</span></span><br><span class="line"><span class="comment"># if the adjustment is larger than 10 seconds.</span></span><br><span class="line">makestep 10 3</span><br><span class="line"></span><br><span class="line"><span class="comment"># Allow NTP client access from local network.</span></span><br><span class="line"><span class="comment">#allow 192.168/16</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Listen for commands only on localhost.</span></span><br><span class="line">bindcmdaddress 127.0.0.1</span><br><span class="line">bindcmdaddress ::1</span><br><span class="line"></span><br><span class="line"><span class="comment"># Serve time even if not synchronized to any NTP server.</span></span><br><span class="line"><span class="comment">#local stratum 10</span></span><br><span class="line"></span><br><span class="line">keyfile /etc/chrony.keys</span><br><span class="line"></span><br><span class="line"><span class="comment"># Specify the key used as password for chronyc.</span></span><br><span class="line">commandkey 1</span><br><span class="line"></span><br><span class="line"><span class="comment"># Generate command key if missing.</span></span><br><span class="line">generatecommandkey</span><br><span class="line"></span><br><span class="line"><span class="comment"># Disable logging of client accesses.</span></span><br><span class="line">noclientlog</span><br><span class="line"></span><br><span class="line"><span class="comment"># Send a message to syslog if a clock adjustment is larger than 0.5 seconds.</span></span><br><span class="line">logchange 0.5</span><br><span class="line"></span><br><span class="line">logdir /var/log/chrony</span><br><span class="line"><span class="comment">#log measurements statistics tracking</span></span><br></pre></td></tr></table></figure>
 <p>这一看基本感觉跟 ntp 配置文件类似, 开头4个地址，查看文档我们发现，chrony有个客户端 chronyc，还有守护进程chronyd</p>
 <p>通过　<code>chronyc sources -v</code> 得到如下状态:</p>
-<p><img src="/blog/blog/img/chrony-1.png" alt="chrony-1"></p>
+<p><img src="/blog/img/chrony-1.png" alt="chrony-1"></p>
 <p>发现chrony貌似是在跟这3个地址在同步时间,but 这三个地址，我们并没有在配置文件中配置，<br>那么从哪里来的? 其实配置里比如配置的</p>
 <p><code>server 0.rhel.pool.ntp.org iburst</code></p>
 <p>这里面包含一个pool基本可以想到这是一个类似LB的地址，实际真正的地址就是上图里的这些，可以理解，chrony 会满世界的找离我们比较近的ntp服务器进行时间同步。</p>
@@ -1535,7 +1535,7 @@ It is also a stand-alone tool for merging data sources recursively.
 <p>然后注意到我们所说的一个情况就是，我们内网的 ntpserver 要比实际现实时间 慢10分钟；</p>
 <p>所有的这一切几乎可以解释的通了， 本机时间慢,chrony 觉得你慢了， 得加快点，于是你的时间跑的飞快:</p>
 <p>通过<code>chronyc tracking</code>命令得到如下:</p>
-<p><img src="/blog/blog/img/chrony-4.jpg" alt="chrony-4"></p>
+<p><img src="/blog/img/chrony-4.jpg" alt="chrony-4"></p>
 <p>经过分析:<br>ppm：是一个相对变化量，1ppm指百万分之一，也就是相对标称频率的变化量，这个值越小越好，标准是在25ppm以内，都认为是正常现象</p>
 <p>chrony 通过比对 和配置的ntpserver，计算出差距，然后动态控制本机系统时钟频率，根据 makestep的参数来调节(加速&#x2F;减缓);最终让时间趋于 上述的server</p>
 <p>有了这样一个东西在内网，而我们的又配置了和内网ntp 同步，内网的时间又慢了10分钟，这就是冲突所在，考虑chrony是 rhel7内置 ，我们不考虑禁用它(即使你禁用它未必管用，因为它配置的时钟频率已经生效了,所以我们该考虑怎么使用chrony,拥抱rhel7的这一变化)</p>
@@ -1544,7 +1544,7 @@ It is also a stand-alone tool for merging data sources recursively.
 <p>再去使用chronyc相关命令，我们发现天下太平了,时间再也不那么快了。</p>
 <p>chrony到底如何，设置系统始终频率? 我花了点时间想查看当前 sys clock frequency发现还是不特别好获得, chrony 通过计算会把当前和server的频率误差记录在  driffile文件里,上述默认配置在 <code>/var/lib/chrony/drift</code></p>
 <p>然后根据代码<a target="_blank" rel="noopener" href="https://github.com/mlichvar/chrony/">https://github.com/mlichvar/chrony/</a>:</p>
-<p><img src="/blog/blog/img/chrony-5.png" alt="chrony-5"></p>
+<p><img src="/blog/img/chrony-5.png" alt="chrony-5"></p>
 <p>嗯,所有一切都解释的通了。。 集群什么的都恢复和平的模样了。注意这是 RHEL7 ,centos7可能也存在该问题</p>
 <p>相关文档:</p>
 <ul>

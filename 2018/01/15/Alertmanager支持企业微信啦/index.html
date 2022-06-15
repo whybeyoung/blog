@@ -15,15 +15,15 @@
 <meta property="og:site_name" content="君莫笑的博客">
 <meta property="og:description" content="Prometheus的Alertmanager组件支持企业微信啦Promethues作为当下比较火热的监控方案,其良好的设计以及理念都使监控变的异常简单,最近prometheus在容器监控中结合granfana也变的异常火热。 Alertmanager 作为其监控方案中的一个独立的组件，主要作用在于发挥告警收敛以及发送具体告警的作用，具有分组，抑制，静音等优良特性。其官方支持 Slack, Ema">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/alert.PNG">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/alert.PNG">
 <meta property="article:published_time" content="2018-01-14T16:10:14.000Z">
-<meta property="article:modified_time" content="2022-06-15T15:18:08.003Z">
+<meta property="article:modified_time" content="2022-06-15T15:49:51.677Z">
 <meta property="article:author" content="ybyang2">
 <meta property="article:tag" content="promethues">
 <meta property="article:tag" content="kubernetes">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://berlinsaint.github.io/blog/blog/img/alert.PNG">
+<meta name="twitter:image" content="https://berlinsaint.github.io/blog/img/alert.PNG">
   
     <link rel="alternative" href="/atom.xml" title="君莫笑的博客" type="application/atom+xml">
   
@@ -222,7 +222,7 @@ receivers:
         corp_id: &quot;wxaf5a99ccccc5f8eb98&quot; ## 企业号的corp id 找企业号管理员可以获得,同全局设置
 </code></pre>
 <p>具体参数含义可以参见: <a target="_blank" rel="noopener" href="https://work.weixin.qq.com/api/doc#10167/%E6%96%87%E6%9C%AC%E6%B6%88%E6%81%AF">https://work.weixin.qq.com/api/doc#10167/%E6%96%87%E6%9C%AC%E6%B6%88%E6%81%AF</a><br>经过如上配置, reciever其实可以精确到个人,比如你可以设置某个人的微信号为一个reciever,或者某个部门为一个reciever，非常灵活</p>
-<p>微信端在收到告警后有如下图所示:<br><img src="/blog/blog/img/alert.PNG" alt="alert"></p>
+<p>微信端在收到告警后有如下图所示:<br><img src="/blog/img/alert.PNG" alt="alert"></p>
 
       
 

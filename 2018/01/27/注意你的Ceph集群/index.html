@@ -15,17 +15,17 @@
 <meta property="og:site_name" content="君莫笑的博客">
 <meta property="og:description" content="注意你的Ceph集群!~没有注意这一点你的集群可能会挂睡梦中刚好醒来,瞅了一眼群,发现群里已经炸开了锅,各个重要系统报来宕机的噩耗。 这一晚的大雪，挺有意思。。。 Q了下运维老朋友,说是遇到了个大坑,某几台机器时间走的飞快，基本是每十秒会多出1s的速度。 可不要小看这小小的时间加速,造成的影响是Ceph的集群某几个osd节点down掉,然后早就了开头那一幕。 原因就是因为时间不同步,Ceph节点健">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/chrony-1.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/chrony-4.jpg">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/chrony-5.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/chrony-1.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/chrony-4.jpg">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/chrony-5.png">
 <meta property="article:published_time" content="2018-01-27T15:02:27.000Z">
-<meta property="article:modified_time" content="2022-06-15T15:18:08.007Z">
+<meta property="article:modified_time" content="2022-06-15T15:49:51.655Z">
 <meta property="article:author" content="ybyang2">
 <meta property="article:tag" content="kubernetes">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="ceph">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://berlinsaint.github.io/blog/blog/img/chrony-1.png">
+<meta name="twitter:image" content="https://berlinsaint.github.io/blog/img/chrony-1.png">
   
     <link rel="alternative" href="/atom.xml" title="君莫笑的博客" type="application/atom+xml">
   
@@ -204,7 +204,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Use public servers from the pool.ntp.org project.</span></span><br><span class="line"><span class="comment"># Please consider joining the pool (http://www.pool.ntp.org/join.html).</span></span><br><span class="line">server 0.rhel.pool.ntp.org iburst</span><br><span class="line">server 1.rhel.pool.ntp.org iburst</span><br><span class="line">server 2.rhel.pool.ntp.org iburst</span><br><span class="line">server 3.rhel.pool.ntp.org iburst</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Ignore stratum in source selection.</span></span><br><span class="line">stratumweight 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># Record the rate at which the system clock gains/losses time.</span></span><br><span class="line">driftfile /var/lib/chrony/drift</span><br><span class="line"></span><br><span class="line"><span class="comment"># Enable kernel RTC synchronization.</span></span><br><span class="line">rtcsync</span><br><span class="line"></span><br><span class="line"><span class="comment"># In first three updates step the system clock instead of slew</span></span><br><span class="line"><span class="comment"># if the adjustment is larger than 10 seconds.</span></span><br><span class="line">makestep 10 3</span><br><span class="line"></span><br><span class="line"><span class="comment"># Allow NTP client access from local network.</span></span><br><span class="line"><span class="comment">#allow 192.168/16</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Listen for commands only on localhost.</span></span><br><span class="line">bindcmdaddress 127.0.0.1</span><br><span class="line">bindcmdaddress ::1</span><br><span class="line"></span><br><span class="line"><span class="comment"># Serve time even if not synchronized to any NTP server.</span></span><br><span class="line"><span class="comment">#local stratum 10</span></span><br><span class="line"></span><br><span class="line">keyfile /etc/chrony.keys</span><br><span class="line"></span><br><span class="line"><span class="comment"># Specify the key used as password for chronyc.</span></span><br><span class="line">commandkey 1</span><br><span class="line"></span><br><span class="line"><span class="comment"># Generate command key if missing.</span></span><br><span class="line">generatecommandkey</span><br><span class="line"></span><br><span class="line"><span class="comment"># Disable logging of client accesses.</span></span><br><span class="line">noclientlog</span><br><span class="line"></span><br><span class="line"><span class="comment"># Send a message to syslog if a clock adjustment is larger than 0.5 seconds.</span></span><br><span class="line">logchange 0.5</span><br><span class="line"></span><br><span class="line">logdir /var/log/chrony</span><br><span class="line"><span class="comment">#log measurements statistics tracking</span></span><br></pre></td></tr></table></figure>
 <p>这一看基本感觉跟 ntp 配置文件类似, 开头4个地址，查看文档我们发现，chrony有个客户端 chronyc，还有守护进程chronyd</p>
 <p>通过　<code>chronyc sources -v</code> 得到如下状态:</p>
-<p><img src="/blog/blog/img/chrony-1.png" alt="chrony-1"></p>
+<p><img src="/blog/img/chrony-1.png" alt="chrony-1"></p>
 <p>发现chrony貌似是在跟这3个地址在同步时间,but 这三个地址，我们并没有在配置文件中配置，<br>那么从哪里来的? 其实配置里比如配置的</p>
 <p><code>server 0.rhel.pool.ntp.org iburst</code></p>
 <p>这里面包含一个pool基本可以想到这是一个类似LB的地址，实际真正的地址就是上图里的这些，可以理解，chrony 会满世界的找离我们比较近的ntp服务器进行时间同步。</p>
@@ -216,7 +216,7 @@
 <p>然后注意到我们所说的一个情况就是，我们内网的 ntpserver 要比实际现实时间 慢10分钟；</p>
 <p>所有的这一切几乎可以解释的通了， 本机时间慢,chrony 觉得你慢了， 得加快点，于是你的时间跑的飞快:</p>
 <p>通过<code>chronyc tracking</code>命令得到如下:</p>
-<p><img src="/blog/blog/img/chrony-4.jpg" alt="chrony-4"></p>
+<p><img src="/blog/img/chrony-4.jpg" alt="chrony-4"></p>
 <p>经过分析:<br>ppm：是一个相对变化量，1ppm指百万分之一，也就是相对标称频率的变化量，这个值越小越好，标准是在25ppm以内，都认为是正常现象</p>
 <p>chrony 通过比对 和配置的ntpserver，计算出差距，然后动态控制本机系统时钟频率，根据 makestep的参数来调节(加速&#x2F;减缓);最终让时间趋于 上述的server</p>
 <p>有了这样一个东西在内网，而我们的又配置了和内网ntp 同步，内网的时间又慢了10分钟，这就是冲突所在，考虑chrony是 rhel7内置 ，我们不考虑禁用它(即使你禁用它未必管用，因为它配置的时钟频率已经生效了,所以我们该考虑怎么使用chrony,拥抱rhel7的这一变化)</p>
@@ -225,7 +225,7 @@
 <p>再去使用chronyc相关命令，我们发现天下太平了,时间再也不那么快了。</p>
 <p>chrony到底如何，设置系统始终频率? 我花了点时间想查看当前 sys clock frequency发现还是不特别好获得, chrony 通过计算会把当前和server的频率误差记录在  driffile文件里,上述默认配置在 <code>/var/lib/chrony/drift</code></p>
 <p>然后根据代码<a target="_blank" rel="noopener" href="https://github.com/mlichvar/chrony/">https://github.com/mlichvar/chrony/</a>:</p>
-<p><img src="/blog/blog/img/chrony-5.png" alt="chrony-5"></p>
+<p><img src="/blog/img/chrony-5.png" alt="chrony-5"></p>
 <p>嗯,所有一切都解释的通了。。 集群什么的都恢复和平的模样了。注意这是 RHEL7 ,centos7可能也存在该问题</p>
 <p>相关文档:</p>
 <ul>

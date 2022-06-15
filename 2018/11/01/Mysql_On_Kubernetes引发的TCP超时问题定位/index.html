@@ -15,25 +15,25 @@
 <meta property="og:site_name" content="君莫笑的博客">
 <meta property="og:description" content="MYSQL On Kubernetes(IPVS)引发的TCP超时问题定位背景 以下数据库上Kubernetes都是研发、测试环境，非生产环境  我们研测测试环境的数据库如 Mysql ，redis ，rabbitmq都以容器的方式在我们自研的paas平台上创建； 但是当我们把mysql已到k8s上时， 我们经常发现MYSQL 的error日志爆出如下错误:  然后我们的客户端则会经常报 Lost">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/mysqls-error.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/mysql-err.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/lvs-nat.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/ipvs-3.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/lnc-0.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/lnc-1.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/lnc-2.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/lnc-err-2.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/mysql-client-err.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/42322.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/systctl.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/k8s_ctl.png">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/after_600_tcp.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/mysqls-error.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/mysql-err.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/lvs-nat.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/ipvs-3.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/lnc-0.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/lnc-1.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/lnc-2.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/lnc-err-2.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/mysql-client-err.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/42322.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/systctl.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/k8s_ctl.png">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/after_600_tcp.png">
 <meta property="article:published_time" content="2018-11-01T04:26:13.000Z">
-<meta property="article:modified_time" content="2022-06-15T15:18:08.004Z">
+<meta property="article:modified_time" content="2022-06-15T15:49:51.737Z">
 <meta property="article:author" content="ybyang2">
 <meta property="article:tag" content="Go Python K8S LVS IPVS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://berlinsaint.github.io/blog/blog/img/mysqls-error.png">
+<meta name="twitter:image" content="https://berlinsaint.github.io/blog/img/mysqls-error.png">
   
     <link rel="alternative" href="/atom.xml" title="君莫笑的博客" type="application/atom+xml">
   
@@ -194,16 +194,16 @@
 </ul>
 <p>我们研测测试环境的数据库如 Mysql ，redis ，rabbitmq都以容器的方式在我们自研的paas平台上创建；</p>
 <p>但是当我们把mysql已到k8s上时， 我们经常发现MYSQL 的error日志爆出如下错误:</p>
-<p><img src="/blog/blog/img/mysqls-error.png" alt="Alt text"></p>
+<p><img src="/blog/img/mysqls-error.png" alt="Alt text"></p>
 <p>然后我们的客户端则会经常报 <code>Lost Mysql Connection错误</code>, 重试后，连接恢复；</p>
-<p><img src="/blog/blog/img/mysql-err.png" alt="Alt text"></p>
+<p><img src="/blog/img/mysql-err.png" alt="Alt text"></p>
 <p>对于该问题，我们首先思路是排查我们代码上是否存在未正常关闭连接， 同时，我们也部署了另一套非容器的 mysql环境，相同代码下，非容器mysql的表现的非常问题，没有一条Aborted记录，因此我们怀疑一定中间某个网络环节导致了该问题。</p>
 <p><code>Percona</code> 社区写了一篇比较好的文章，这篇文章有必要阅读下，因为这种错误原因是不确定的。</p>
 <p>地址是 <code>https://www.percona.com/blog/2016/05/16/mysql-got-an-error-reading-communication-packet-errors/</code></p>
 <p>但是并没有给出这类问题的根本原因，或者说导致该错误的原因其实可能有多种。</p>
 <p>由于是基本确立问题范围出现在 docker网络，所以我们必须要深入了解下 kubernetes 1.11上的 <code>IPVS</code> 模式原理。</p>
 <p>Kubernetes ipvs 基于 LVS-NAT模型，基本流程如下图:</p>
-<p><img src="/blog/blog/img/lvs-nat.png" alt="Alt text"></p>
+<p><img src="/blog/img/lvs-nat.png" alt="Alt text"></p>
 <ul>
 <li>当用户请求到达Director Server，此时请求的数据报文会先到达内核的PREROUTING链，此时报文的源IP是CIP，目标IP是VIP（K8S 每个node都会有该VIP子接口，名为kube-ipvs0，为虚拟接口）。</li>
 </ul>
@@ -212,7 +212,7 @@
 <li>PREROUTING链检查发现数据包的目标IP是本机，将数据包送至INPUT链。</li>
 </ul>
 <p>iptables命令是查不到的INPUT这个规则的，因为是ipvs的缘故, 使用 <code>ipvsadm -ln</code> 可以查看到如下规则:</p>
-<p><img src="/blog/blog/img/ipvs-3.png" alt="Alt text"></p>
+<p><img src="/blog/img/ipvs-3.png" alt="Alt text"></p>
 <ul>
 <li><p>POSTROUTING链通过选路，将数据包发送到Real Server(这个我们不好看到，因为内核态或者有没有好的办法可以告知我。)</p>
 </li>
@@ -229,18 +229,18 @@
 <p><code>tcpdump -i tunl0  host 192.100.111.84  -s0  -w client-mysql.pcap</code></p>
 <p>注意不用指定src dst，那样只能抓到单向报文。。</p>
 <p>同时我们的 client发起一个mysql查询请求， 并另开一个shell 在该node执行 <code>ipvsadm -lnc</code></p>
-<p>结果如下:<br><img src="/blog/blog/img/lnc-0.png" alt="Alt text"></p>
-<p><img src="/blog/blog/img/lnc-1.png" alt="Alt text"></p>
+<p>结果如下:<br><img src="/blog/img/lnc-0.png" alt="Alt text"></p>
+<p><img src="/blog/img/lnc-1.png" alt="Alt text"></p>
 <p>这个图。。。。</p>
 <p>第二列 ，很可疑。。。expired date。。。。。超时。。。，先不管，证明我们的猜想。。继续往下走，不断执行该命令，  第二列在减少，看起来默认是15min，那么这15min我client不再做任何查询，等等吧。。。。</p>
-<p>waiting。。。<br><img src="/blog/blog/img/lnc-2.png" alt="Alt text"></p>
+<p>waiting。。。<br><img src="/blog/img/lnc-2.png" alt="Alt text"></p>
 <p>还有5分钟， 好紧张</p>
 <p>我们想抓到到15min那时候， 会发生什么， 然后client再去查询，会不会触发 mysql的错误以及client的错误(文初的错误)</p>
-<p>时间到:<br><img src="/blog/blog/img/lnc-err-2.png" alt="Alt text"></p>
+<p>时间到:<br><img src="/blog/img/lnc-err-2.png" alt="Alt text"></p>
 <p>我凑， 看起来该链接被清掉了，这时候我们去执行一条查询看看；</p>
-<p><img src="/blog/blog/img/mysql-client-err.png" alt="Alet text"></p>
+<p><img src="/blog/img/mysql-client-err.png" alt="Alet text"></p>
 <p>我们再看看抓包情况:(我是在POD所在节点宿主上抓的跟数据库交互的报文，然后没有抓到连接被RST的报文略疑惑，lvs清空连接对连接本身究竟了做了什么操作仍需要关注。。)</p>
-<p><img src="/blog/blog/img/42322.png" alt="Alet text"><br>在此之后，查询时候又会新键连接， 即没有任何征兆该链接就被断开了，按理说client使用 mysql connection pool 连接复用是不会轻易就更换连接的。</p>
+<p><img src="/blog/img/42322.png" alt="Alet text"><br>在此之后，查询时候又会新键连接， 即没有任何征兆该链接就被断开了，按理说client使用 mysql connection pool 连接复用是不会轻易就更换连接的。</p>
 <p>基本确定了问题， 看起来是 ipvs 维护 VIP的这条链接存在15min左右的超时阈值设定，这个值是否跟系统默认的<code>tcp_keepalive_timeout</code> 有协同影响？ 那么系统的默认tcp超时时间是多少呢？</p>
 <p>确立这个思路，查阅资料(基于15min ipvs为关键词)：</p>
 <ul>
@@ -251,9 +251,9 @@
 <p>基于上述资料，基本可以分析到， ipvs维护链接有个超时时间，默认为900s为15分钟；然后操作系统默认的tcp_keepalive_timeout 默认为7200s，当一个空闲 tcp连接达到900s时，首先他被ipvs断了，但是操作系统认为该链接还没有到保活超时，所以客户端还会使用之前的连接去发送查询请求，但是ipvs已经不维护该链接了，所以 Lost Connection。。所以只要减小系统的tcp_keepalive_timeout时间，比如到600，后发送一个心跳包，让tcp保活， 这样， ipvs的连接超时也会被重置计数为15min。</p>
 <p>我紧急基于上述资料做了k8s node全量修改配置：</p>
 <p>playbook如下:</p>
-<p><img src="/blog/blog/img/systctl.png" alt="Alet text"></p>
+<p><img src="/blog/img/systctl.png" alt="Alet text"></p>
 <p>k8s.conf如下:</p>
-<p><img src="/blog/blog/img/k8s_ctl.png" alt="Alet text"></p>
+<p><img src="/blog/img/k8s_ctl.png" alt="Alet text"></p>
 <p>关于这三个参数解释下:</p>
 <p>当启用与内核参数或守护程序端配置或客户端配置相关的选项时，它将根据这些选项终止tcp会话。<br>例如，当您将以上述内核参数选项视为示例时，首先将在600秒后开始发送keepalive数据包，之后每隔30秒发送一次下一个数据包10次。<br>当客户端或服务器在这段时间内根本没有应答时，tcp会话将被视为已损坏，并将终止。</p>
 <ul>
@@ -265,7 +265,7 @@
 <li>（可以清楚看到13:33 道13:43 期间连接无数据，但是10分钟到了，里面有一个KeepAlive报文,修改之前linux 这个值默认是7200s也就是2小时！）</li>
 </ul>
 <p>我们可以在 <code>https://access.redhat.com/solutions/23874</code> 看到一些解释</p>
-<p><img src="/blog/blog/img/after_600_tcp.png" alt="Alet text"></p>
+<p><img src="/blog/img/after_600_tcp.png" alt="Alet text"></p>
 <ul>
 <li>该client的数据库连接池的连接被保活而不是被ipvs clear掉。</li>
 </ul>

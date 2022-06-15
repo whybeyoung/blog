@@ -15,13 +15,13 @@
 <meta property="og:site_name" content="君莫笑的博客">
 <meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在容器技术高度流行的当下，webterminal（WEB终端）作为一种简单且实用的功能被诸多webUI管理系统所采用。当然我们研测云平台也不例外。本文主要讨论研测云平台的 webterminal 不同实现之间的对比（Go 与 Python）。 webterminal 关键逻辑想要实现 webterminal 关键点就是">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://berlinsaint.github.io/blog/blog/img/terminal2.gif">
+<meta property="og:image" content="https://berlinsaint.github.io/blog/img/terminal2.gif">
 <meta property="article:published_time" content="2018-10-07T14:26:13.000Z">
-<meta property="article:modified_time" content="2022-06-15T15:18:08.005Z">
+<meta property="article:modified_time" content="2022-06-15T15:49:51.655Z">
 <meta property="article:author" content="ybyang2">
 <meta property="article:tag" content="Go Python K8S">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://berlinsaint.github.io/blog/blog/img/terminal2.gif">
+<meta name="twitter:image" content="https://berlinsaint.github.io/blog/img/terminal2.gif">
   
     <link rel="alternative" href="/atom.xml" title="君莫笑的博客" type="application/atom+xml">
   
@@ -198,7 +198,7 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">  req := k8sClient.CoreV1().RESTClient().Post().</span><br><span class="line">	Resource(<span class="string">&quot;pods&quot;</span>).</span><br><span class="line">	Name(podName).</span><br><span class="line">	Namespace(namespace).</span><br><span class="line">	SubResource(<span class="string">&quot;exec&quot;</span>)</span><br><span class="line"></span><br><span class="line">req.VersionedParams(&amp;v1.PodExecOptions&#123;</span><br><span class="line">	Container: containerName,</span><br><span class="line">	Command:   cmd,</span><br><span class="line">	Stdin:     <span class="literal">true</span>,</span><br><span class="line">	Stdout:    <span class="literal">true</span>,</span><br><span class="line">	Stderr:    <span class="literal">true</span>,</span><br><span class="line">	TTY:       <span class="literal">true</span>,</span><br><span class="line">&#125;, scheme.ParameterCodec)</span><br><span class="line"></span><br><span class="line">exec, _ := remotecommand.NewSPDYExecutor(cfg, <span class="string">&quot;POST&quot;</span>, req.URL())</span><br><span class="line"></span><br><span class="line">exec.Stream(remotecommand.StreamOptions&#123;</span><br><span class="line">	Stdin:             reader,</span><br><span class="line">	Stdout:            writer,</span><br><span class="line">	Stderr:            writer,</span><br><span class="line">	TerminalSizeQueue: terminalSizeQueue,</span><br><span class="line">	Tty:               <span class="literal">true</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>完全的同步代码使用方式，在 Stream 函数内部，库已经帮我们处理好了 reader writer 数据流的处理，我们所要做的就是将流传进来。</p>
-<h3 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h3><p><img src="/blog/blog/img/terminal2.gif" alt="alert"></p>
+<h3 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h3><p><img src="/blog/img/terminal2.gif" alt="alert"></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文大致对比了一下 Go 和 Python 在实现 webterminal 关键功能的代码。我们可以看到，语言的良好的支持性在此时的作用十分的明显。在使用 python 的集成工作中，由于很多库不能无缝接入协程逻辑，其中的适配工作还是比较繁杂的，而在 Go 中完全没有这种问题。</p>
 
       
